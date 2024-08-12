@@ -1,0 +1,11 @@
+#node modules of client
+
+/client/node_modules
+
+#node modules of server
+
+/server/node_modules
+
+#file containing port number and db connection string
+
+.env

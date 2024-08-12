@@ -1,0 +1,442 @@
+openapi: 3.0.0
+
+info:
+  title: Blog APIs
+  version: 1.0.0
+  description: API for managing blogs and users
+
+servers:
+  - url: http://localhost:5000
+    description: Local server
+
+components:
+  # securitySchemes:
+  #   cookieAuth:
+  #     type: apiKey
+  #     in: cookie
+  #     name: jwt
+  schemas:
+    # Blog:
+    #   type: object
+    #   required:
+    #     - title
+    #     - snippet
+    #     - body
+    #     - author
+    #     - createdBy
+    #   properties:
+    #     id:
+    #       type: string
+    #       description: The auto-generated id of the blog
+    #     title:
+    #       type: string
+    #     snippet:
+    #       type: string
+    #     body:
+    #       type: string
+    #     author:
+    #       type: string
+    #     createdBy:
+    #       type: string
+    #       description: The id of the user who created the blog
+    # User:
+    #   type: object
+    #   required:
+    #     - email
+    #     - password
+    #   properties:
+    #     email:
+    #       type: string
+    #     password:
+    #       type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+
+paths:
+
+  /blogs:
+    get:
+      summary: Get all blogs created by the logged-in user
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of blogs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    type: object
+                    required:
+                      - title
+                      - snippet
+                      - body
+                      - author
+                    properties:
+                      _id: 
+                        type: string
+                        example: id of the blog
+                      title:
+                        type: string
+                        example: title of the blog
+                      snippet:
+                        type: string
+                        example: snippet of the blog
+                      body:
+                        type: string
+                        example: body of the blog
+                      author:
+                        type: string
+                        example: author like mario or yushi
+                      createdBy:
+                        type: string
+                        example: id of the user who created this blog
+                      __v:
+                        type: int
+                        example: 0
+                     
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a new blog
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                type: object
+                required:
+                  - title
+                  - snippet
+                  - body
+                  - author
+                properties:
+                   title:
+                     type: string
+                   snippet:
+                     type: string
+                   body:    
+                     type: string
+                   author:
+                     type: string                    
+      responses:
+        '201':
+          description: Blog created successfully
+          content:
+            application/json:
+              schema:
+                    type: object
+                    required:
+                      - title
+                      - snippet
+                      - body
+                      - author
+                    properties:
+                      title:
+                        type: string
+                        example: title of the blog
+                      snippet:
+                        type: string
+                        example: snippet of the blog
+                      body:    
+                        type: string
+                        example: body of the blog
+                      author:
+                        type: string
+                        example: mario
+                      createdBy:
+                        type: string
+                        example: id of the user who created it
+                      _id:
+                        type: string
+                        example: id of the blog
+                      __v:
+                        type: int
+                        example: 0
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /blogs/{id}:
+    get:
+      summary: Get a blog by ID
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Blog data found
+          content:
+            application/json:
+               schema:
+                type: array
+                items:
+                    type: object
+                    required:
+                      - title
+                      - snippet
+                      - body
+                      - author
+                    properties:
+                      _id: 
+                        type: string
+                        example: id of the blog
+                      title:
+                        type: string
+                        example: title of the blog
+                      snippet:
+                        type: string
+                        example: snippet of the blog
+                      body:
+                        type: string
+                        example: body of the blog
+                      author:
+                        type: string
+                        example: author like mario or yushi
+                      createdBy:
+                        type: string
+                        example: id of the user who created this blog
+                      __v:
+                        type: int
+                        example: 0
+        '404':
+          description: Blog not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update a blog
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                    type: object
+                    required:
+                      - title
+                      - snippet
+                      - body
+                      - author
+                    properties:
+                      title:
+                        type: string
+                      snippet:
+                        type: string
+                      body:
+                        type: string
+                      author:
+                        type: string
+      responses:
+        '200':
+          description: Blog updated successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    type: object
+                    required:
+                      - title
+                      - snippet
+                      - body
+                      - author
+                    properties:
+                      _id: 
+                        type: string
+                        example: id of the blog
+                      title:
+                        type: string
+                        example: title of the blog
+                      snippet:
+                        type: string
+                        example: snippet of the blog
+                      body:
+                        type: string
+                        example: body of the blog
+                      author:
+                        type: string
+                        example: author like mario or yushi
+                      createdBy:
+                        type: string
+                        example: id of the user who created this blog
+                      __v:
+                        type: int
+                        example: 0
+        '404':
+          description: Blog not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a blog
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Blog deleted successfully
+        '404':
+          description: Blog not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /signup:
+    post:
+      summary: Sign up a new user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user1@monty.com
+                password:
+                  type: string
+                  example: user1monty
+      responses:
+        '200':
+          description: User signed up successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: string
+                    example: user id
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /login:
+    post:
+      summary: Log in an existing user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user1@monty.com
+                password:
+                  type: string
+                  example: user1monty
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: string
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  /logout:
+    get:
+      summary: Log out the current user
+      tags: [Users]
+      responses:
+        '200':
+          description: User logged out successfully
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
